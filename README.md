@@ -9,8 +9,8 @@ by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastl
 
 ## Features supported (in this repo):
 
-- [Inference on image](#inference-on-image)
-- [Auto annotation in YOLO format](#auto-annotation)
+- [Inference on image](#inference-on-image) 🚀
+- [Auto annotation in YOLO format](#auto-annotation) 🥳
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastl
 - ✅ PyTorch 2.7 or higher
 - ✅ CUDA 12.2 or greater (not necessarily required, you can also use CPU)
 
-## Installation
+## Installation 👨‍💻
 
 1. **Create a new virtual environment:**
 
@@ -45,7 +45,7 @@ by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastl
 ⚠️ **Note:** Access to the `sam3.pt` checkpoint must be requested via the SAM 3 Hugging Face [repository](https://huggingface.co/facebook/sam3).
 Once your request is approved, you’ll be able to download and use the `sam3.pt` model for inference with the example shown below.
 
-## Inference on Image
+## Inference on Image 🎉
 
 ![image-inference-readme-demo.jpg](/assets/image-inference-demo.jpg)
 
@@ -79,7 +79,7 @@ result_image = draw_box_and_masks(cv2.imread(url, cv2.COLOR_RGB2BGR),  # PIL -> 
 cv2.imwrite("sam3_results.png", result_image)  # Save (optional)
 ```
 
-## Auto annotation
+## Auto annotation 🔥
 
 ![sam3 auto annotation workflow](assets/sam3-autoannotate.png)
 
