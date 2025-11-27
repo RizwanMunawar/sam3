@@ -9,8 +9,8 @@ by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastl
 
 ## Features supported (in this repo):
 
-- Inference on image
-- Auto annotation in YOLO format
+- [Inference on image](#inference-on-image)
+- [Auto annotation in YOLO format](#auto-annotation)
 
 ## Prerequisites
 
