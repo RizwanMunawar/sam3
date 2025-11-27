@@ -1,5 +1,7 @@
 # SAM 3: Segment Anything 3
 
+![sam3-architecture](assets/sam3-architecture.png)
+
 SAM 3 is a unified foundation model for promptable segmentation in images and videos. It can detect, 
 segment, and track objects using text or visual prompts such as points, boxes, and masks. Compared to its predecessor 
 [SAM 2](https://github.com/facebookresearch/sam2), SAM 3 introduces the ability to exhaustively segment all instances of an open-vocabulary concept specified 
@@ -72,6 +74,52 @@ result_image = draw_box_and_masks(cv2.imread(url, cv2.COLOR_RGB2BGR),  # PIL -> 
 cv2.imwrite("sam3_results.png", result_image)  # Save (optional)
 ```
 
+### Auto annotation
+
+![sam3 auto annotation workflow](assets/sam3-autoannotate.png)
+
+```python
+import os
+import cv2
+from PIL import Image
+from sam3 import build_sam3_image_model
+from sam3.model.sam3_image_processor import Sam3Processor
+from sam3.visualize.utils import draw_box_and_masks
+
+# SAM3 model load (cpu inference also supported)
+processor = Sam3Processor(build_sam3_image_model(checkpoint_path="sam3.pt"))
+
+images_dir = "assets/images"
+yolo_ann_dir = "assets/images/yolo_labels"
+if not os.path.exists(yolo_ann_dir):
+    os.mkdir(yolo_ann_dir)
+
+# Auto annotation
+label_to_predict = "bird"
+for i, img in enumerate(os.listdir(images_dir)):
+    url = os.path.join(images_dir, img)
+    image = Image.open(url)  # Image load
+
+    # Run inference with text prompt
+    results = processor.set_text_prompt(state=processor.set_image(image),
+                                        prompt=label_to_predict)
+
+    # Visualization and auto annotation in YOLO format.
+    result_image = draw_box_and_masks(
+        cv2.imread(url, cv2.COLOR_RGB2BGR), # PIL -> OpenCV
+        results=results,                    # SAM3 predictions
+        show_boxes=True,                    # Display bounding boxes on output image
+        show_masks=True,                    # Display masks on output image
+        mask_alpha=0.4,                     # Adjust mask overlay value, range [0.0 - 1.0]
+        show_conf=True,                     # Bool: display object confidence score.
+        line_width=4,                       # Int: Adjust label, box and mask fontsize.
+        label=label_to_predict,             # Str: Bounding box/mask label
+        save_yolo=True,                     # Bool: Write annotations in YOLO format.
+        filename=os.path.join(yolo_ann_dir, img[-4]+".txt"),  # Str: Annotation file name.
+        class_id=0                          # Object ID, i.e. person class ID 0, car class ID 1.
+    )
+    print(f"{i+1} Images processed, annotations saved in {yolo_ann_dir}")
+```
 ### Inference on video
 
 Coming soon....
