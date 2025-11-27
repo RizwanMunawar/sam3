@@ -7,6 +7,11 @@ segment, and track objects using text or visual prompts such as points, boxes, a
 [SAM 2](https://github.com/facebookresearch/sam2), SAM 3 introduces the ability to exhaustively segment all instances of an open-vocabulary concept specified 
 by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastly larger set of open-vocabulary prompts. 
 
+## Features supported (in this repo):
+
+- Inference on image
+- Auto annotation in YOLO format
+
 ## Prerequisites
 
 - ✅ Python 3.12 or higher
@@ -40,7 +45,7 @@ by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastl
 ⚠️ **Note:** Access to the `sam3.pt` checkpoint must be requested via the SAM 3 Hugging Face [repository](https://huggingface.co/facebook/sam3).
 Once your request is approved, you’ll be able to download and use the `sam3.pt` model for inference with the example shown below.
 
-### Inference on Image
+## Inference on Image
 
 ![image-inference-readme-demo.jpg](/assets/image-inference-demo.jpg)
 
@@ -74,7 +79,7 @@ result_image = draw_box_and_masks(cv2.imread(url, cv2.COLOR_RGB2BGR),  # PIL -> 
 cv2.imwrite("sam3_results.png", result_image)  # Save (optional)
 ```
 
-### Auto annotation
+## Auto annotation
 
 ![sam3 auto annotation workflow](assets/sam3-autoannotate.png)
 
@@ -116,11 +121,11 @@ for i, img in enumerate(os.listdir(images_dir)):
         label=label_to_predict,             # Str: Bounding box/mask label
         save_yolo=True,                     # Bool: Write annotations in YOLO format.
         filename=os.path.join(yolo_ann_dir, img[-4]+".txt"),  # Str: Annotation file name.
-        class_id=0                          # Object ID, i.e. person class ID 0, car class ID 1.
+        class_id=0                          # Object ID, i.e. person class ID 0.
     )
     print(f"{i+1} Images processed, annotations saved in {yolo_ann_dir}")
 ```
-### Inference on video
+## Inference on video
 
 Coming soon....
 
