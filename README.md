@@ -120,7 +120,7 @@ for i, img in enumerate(os.listdir(images_dir)):
         line_width=4,                       # Int: Adjust label, box and mask fontsize.
         label=label_to_predict,             # Str: Bounding box/mask label
         save_yolo=True,                     # Bool: Write annotations in YOLO format.
-        filename=os.path.join(yolo_ann_dir, img[-4]+".txt"),  # Str: Annotation file name.
+        filename=os.path.join(yolo_ann_dir, img[:-4]+".txt"),  # Str: Annotation file name.
         class_id=0                          # Object ID, i.e. person class ID 0.
     )
     print(f"{i+1} Images processed, annotations saved in {yolo_ann_dir}")
