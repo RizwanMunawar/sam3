@@ -11,6 +11,7 @@ by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastl
 
 - [Inference on image](#inference-on-image-) 🚀
 - [Auto annotation in YOLO format](#auto-annotation-) 🥳
+- [Inference on video](#inference-on-video) 😍
 
 ## Prerequisites
 
@@ -117,17 +118,77 @@ for i, img in enumerate(os.listdir(images_dir)):
         show_masks=True,                    # Display masks on output image
         mask_alpha=0.4,                     # Adjust mask overlay value, range [0.0 - 1.0]
         show_conf=True,                     # Bool: display object confidence score.
-        line_width=4,                       # Int: Adjust label, box and mask fontsize.
+        line_width=4,                       # Int: Adjust label, box, and mask fontsize.
         label=label_to_predict,             # Str: Bounding box/mask label
         save_yolo=True,                     # Bool: Write annotations in YOLO format.
         filename=os.path.join(yolo_ann_dir, img[:-4]+".txt"),  # Str: Annotation file name.
-        class_id=0                          # Object ID, i.e. person class ID 0.
+        class_id=0                          # Object ID, i.e., person class ID 0.
     )
     print(f"{i+1} Images processed, annotations saved in {yolo_ann_dir}")
 ```
-## Inference on video
 
-Coming soon....
+## Inference on video 😍
+
+⚠️  Currently, video processing runs frame-by-frame. This means the model does not retain object information from previous frames yet. 
+
+```python
+import cv2
+from PIL import Image
+from sam3 import build_sam3_image_model
+from sam3.model.sam3_image_processor import Sam3Processor
+from sam3.visualize.utils import draw_box_and_masks
+
+# === Settings ===
+label_to_predict = "dog"
+input_video = "path/to/video.mp4"
+output_video = "output_sam3.avi"
+model_path = "sam3.pt"
+
+# === LOAD MODEL ===
+print("[INFO] Loading SAM3 model...")
+processor = Sam3Processor(build_sam3_image_model(checkpoint_path=model_path))
+
+# === VIDEO CAPTURE ===
+cap = cv2.VideoCapture(input_video)
+if not cap.isOpened():
+    print("Error opening video file")
+    exit()
+
+fps = int(cap.get(cv2.CAP_PROP_FPS))
+width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fourcc = cv2.VideoWriter_fourcc(*"XVID")
+writer = cv2.VideoWriter(output_video, fourcc, fps, (width, height))
+
+frame_count = 0
+
+# === PROCESS VIDEO ===
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    frame_count += 1
+    print(f"[INFO] Processing frame {frame_count}")
+
+    # OpenCV (BGR) -> PIL (RGB)
+    image_pil = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+
+    # Run inference
+    state = processor.set_image(image_pil)
+    results = processor.set_text_prompt(state=state, prompt=label_to_predict)
+
+    # Draw bbox + mask
+    output_frame = draw_box_and_masks(frame, results=results, show_boxes=True,
+                                      show_masks=True, line_width=3, label=label_to_predict)
+
+    writer.write(output_frame)  # Write processed frame
+  
+# === CLEANUP ===
+cap.release()
+writer.release()
+cv2.destroyAllWindows()
+```
 
 ## License
 
