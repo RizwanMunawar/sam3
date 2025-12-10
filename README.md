@@ -11,7 +11,7 @@ by a short text phrase or exemplars. Unlike prior work, SAM 3 can handle a vastl
 
 - [Inference on image](#inference-on-image-) 🚀
 - [Auto annotation in YOLO format](#auto-annotation-) 🥳
-- [Inference on video](#inference-on-video)
+- [Inference on video](#inference-on-video) 😍
 
 ## Prerequisites
 
@@ -126,7 +126,8 @@ for i, img in enumerate(os.listdir(images_dir)):
     )
     print(f"{i+1} Images processed, annotations saved in {yolo_ann_dir}")
 ```
-## Inference on video
+
+## Inference on video 😍
 
 ⚠️  Currently, video processing runs frame-by-frame. This means the model does not retain object information from previous frames yet. 
 
